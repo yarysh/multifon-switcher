@@ -1,0 +1,8 @@
+{
+    "name": "multifon_switcher",
+    "version": "0.1.0",
+    "main": "main",
+    "scripts": {
+        "start": "electron ."
+    }
+}
