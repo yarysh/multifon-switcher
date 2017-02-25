@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 import {net} from 'electron'
 
-import config from './config'
+import config from '../config'
 
 
 const codeRegexp = new RegExp('<code>(\\d+)</code>', 'i')
@@ -11,12 +11,16 @@ const descRegexp = new RegExp('<description>(.*?)</description>', 'i')
 export default class MultifonClient {
     /**
      * Initialize a client
-     * @param {string} login - Multifon login, e.g. 7XXXXXXXXXX@multifon.ru
-     * @param {string} password - Multifon password
+     * @param {Object||null} credentials - Multifon credentials {login: <login>, password: <password>}
      */
-    constructor(login, password) {
-        this.login = login
-        this.password = password
+    constructor(credentials={}) {
+        this.login = credentials['login']
+        this.password = credentials['password']
+    }
+
+    setCredentials(credentials) {
+        this.login = credentials['login']
+        this.password = credentials['password']
     }
 
     /**

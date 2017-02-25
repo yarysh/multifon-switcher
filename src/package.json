@@ -1,8 +1,14 @@
 {
-    "name": "multifon_switcher",
-    "version": "0.1.0",
-    "main": "main",
-    "scripts": {
-        "start": "electron ."
-    }
+  "name": "multifon_switcher",
+  "version": "0.1.0",
+  "main": "app",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^1.4.13",
+    "electron-prebuilt-compile": "^1.4.15",
+    "electron-rebuild": "^1.5.7",
+    "keytar": "^3.0.2"
+  }
 }
