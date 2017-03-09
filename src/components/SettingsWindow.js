@@ -1,13 +1,13 @@
 import path from 'path'
 import url from 'url'
 import {BrowserWindow, ipcMain} from 'electron'
+
 import {Credentials} from '../credentials'
 import config from '../config'
 
 
 export default class SettingsWindow {
-    constructor(tray) {
-        this.tray = tray
+    constructor() {
         this.window = null
         ipcMain.on('save-settings', (event, data) => {
             if (data['login'] && data['password']) {

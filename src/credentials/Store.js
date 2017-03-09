@@ -6,9 +6,7 @@ import config from '../config'
 
 export default class Store {
     constructor() {
-        console.log('creating store')
         this._dataFilePath = path.join((app || remote.app).getPath('userData'), config.credentials.dataFileName)
-        console.log(this._dataFilePath)
         this.data = this._parseDataFile()
     }
 

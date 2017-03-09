@@ -1,5 +1,4 @@
 import electron from 'electron'
-import {Credentials} from '../credentials'
 import {MultifonClient} from '../utils'
 import SettingsWindow from './SettingsWindow'
 import config from '../config'
@@ -12,12 +11,10 @@ export default class Tray {
         this.menu = this._buildContextMenu()
         this.tray.setContextMenu(this.menu)
 
-        this.multifonClient = new MultifonClient(Credentials.get())
-        this.settingsWindow = new SettingsWindow(this.tray)
+        this.multifonClient = new MultifonClient(this.menuItemSwitcher)
+        this.settingsWindow = new SettingsWindow()
 
-        this.multifonClient.getCurrentRouting((currentRouting, error) => {
-            if (!error) this.menu.items[currentRouting].checked = true
-        });
+        // this.multifonClient.checkCurrentRouting()
     }
 
     _buildContextMenu() {
@@ -25,15 +22,15 @@ export default class Tray {
         return electron.Menu.buildFromTemplate([
             {
                 label: routing.phone.label, routing: routing.phone.value,
-                type: 'radio', checked: true, click: event => {this.changeRouting(event)}
+                type: 'radio', checked: true, click: item => {this.multifonClient.changeRouting(item.routing)}
             },
             {
                 label: routing.multifon.label, routing: routing.multifon.value,
-                type: 'radio', click: event => {this.changeRouting(event)}
+                type: 'radio', click: item => {this.multifonClient.changeRouting(item.routing)}
             },
             {
                 label: routing.multifon_phone.label, routing: routing.multifon_phone.value,
-                type: 'radio', click: event => {this.changeRouting(event)}
+                type: 'radio', click: item => {this.multifonClient.changeRouting(item.routing)}
             },
             {type: 'separator'},
             {label: 'Настройки', click: () => {this.settingsWindow.show()}},
@@ -41,10 +38,9 @@ export default class Tray {
         ])
     }
 
-    changeRouting(event) {
-        this.multifonClient.changeRouting(event.routing, error => {
-            console.log(error)
-        })
+    menuItemSwitcher(itemId) {
+        this.menu.items[itemId].checked = true
+        // TODO: Change menu icon
     }
 
     quitApp() {
