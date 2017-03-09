@@ -18,6 +18,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #494949;
         }
         input {
             display: block;
@@ -25,41 +26,106 @@
             outline-color: #cceadb;
             width: 350px;
         }
-        #login, #password {
-            color: #494949;
+        .form__notice {
+            border: 1px solid #e96980;
+            color: #e96980;
+            height: 50px;
+            width: 372px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form__notice_hidden {
+            display: none;
+        }
+        .form__notice_error {
+            border: 1px solid #e96980;
+            color: #e96980;
+        }
+        .form__notice_success {
+            border: 1px solid #06a373;
+            color: #06a373;
+        }
+        .form__notice__text {
+            line-height: 50px;
+            margin: 0 auto;
+        }
+        .form__login, .form__password {
             height: 50px;
             padding-left: 20px;
         }
-        #login {
+        .form__login {
             margin-bottom: 20px;
         }
-        #password {
-            margin-bottom: 44px;
+        .form__help {
+            font-size: 12px;
+            color: #999;
         }
-        #save {
+        .form__save {
             -webkit-appearance: none;
             background-color: #009a59;
             border: none;
             color: #FFF;
+            margin-top: 34px;
             height: 48px;
             width: 100%;
+        }
+        .form__save_disabled {
+            background-color: #b2b2b2;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="form">
-        <input id="login" type="email" placeholder="Логин (7XXXXXXXXXX@multifon.ru)">
-        <input id="password" type="password" placeholder="Пароль">
-        <input id="save" type="button" value="Сохранить">
+        <div class="form__notice form__notice_hidden">
+            <span id="notice" class="form__notice__text"></span>
+        </div>
+        <input id="login" class="form__login" type="email" placeholder="Логин (7XXXXXXXXXX@multifon.ru)">
+        <input id="password" class="form__password" type="password" placeholder="Пароль">
+        <span class="form__help">USSD команда для получения пароля: *137#.</span>
+        <input id="save" class="form__save" type="button" value="Сохранить">
     </div>
 </div>
 <script>
     import {ipcRenderer} from 'electron'
+    const loginRegexp = new RegExp('7\\d{10}@multifon.ru', 'i')
+    const notice = document.getElementById('notice')
     const login = document.getElementById('login')
     const password = document.getElementById('password')
-    document.getElementById('save').addEventListener('click', () => {
+    const save = document.getElementById('save')
+    const validateForm = () => {
+        if (login.value && password.value) {
+            if (loginRegexp.test(login.value)) return
+            return 'Неверный логин'
+        }
+        return 'Заполните все поля'
+    }
+    save.addEventListener('click', (event) => {
+        save.classList.add('form__save_disabled')
+        const error = validateForm()
+        if (!error) {
+            notice.innerText = ''
+            notice.parentElement.classList.add('form__notice_hidden')
+            notice.parentElement.classList.remove('form__notice_error')
+            notice.parentElement.classList.remove('form__notice_success')
+        } else {
+            notice.innerText = error
+            notice.parentElement.classList.remove('form__notice_success')
+            notice.parentElement.classList.add('form__notice_error')
+            notice.parentElement.classList.remove('form__notice_hidden')
+            save.classList.remove('form__save_disabled')
+            return
+        }
         ipcRenderer.send('save-settings', {'login': login.value, 'password': password.value})
+    })
+    ipcRenderer.on('settings-saved', (event, error) => {
+        save.classList.remove('form__save_disabled')
+        if (!error) {
+            notice.innerText = 'Данные успешно сохранены'
+            notice.parentElement.classList.add('form__notice_success')
+            notice.parentElement.classList.remove('form__notice_error')
+            notice.parentElement.classList.remove('form__notice_hidden')
+        }
     })
     ipcRenderer.on('load-settings', (event, credentials) => {
         login.value = credentials['login']

@@ -3,7 +3,8 @@ export default {
         dataFileName: 'multifon-switcher.dat'
     },
     multifon: {
-        url: 'https://sm.megafon.ru/sm/client/routing/set',
+        getRoutingUrl: 'https://sm.megafon.ru/sm/client/routing',
+        setRoutingUrl: 'https://sm.megafon.ru/sm/client/routing/set',
         routing: {
             phone: {label: 'На телефон', value: 0},
             multifon: {label: 'В Мультифон', value: 1},

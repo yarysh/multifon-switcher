@@ -6,11 +6,15 @@ import config from '../config'
 
 
 export default class SettingsWindow {
-    constructor() {
+    constructor(tray) {
+        this.tray = tray
         this.window = null
         ipcMain.on('save-settings', (event, data) => {
             if (data['login'] && data['password']) {
                 Credentials.set(data['login'], data['password'])
+                this.window.webContents.send('settings-saved', null)
+            } else {
+                this.window.webContents.send('settings-saved', 'Неверный логин или пароль')
             }
         })
     }
