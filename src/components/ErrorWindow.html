@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Multifon Switcher</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font: caption;
+        }
+        html, body, .container {
+            height: 100%;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 26px;
+            text-align: center;
+        }
+        .error {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #e96980;
+        }
+        .error__title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #e96980;
+            margin-bottom: 20px;
+        }
+        .error__content {
+            font-size: 18px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="error">
+        <div class="error__title">&#x26A0;&nbsp; <span id="title"></span></div>
+        <div class="error__content" id="content"></div>
+    </div>
+</div>
+<script>
+    import {ipcRenderer} from 'electron'
+    const title = document.getElementById('title')
+    const content = document.getElementById('content')
+    ipcRenderer.on('load-error', (event, error) => {
+        title.innerText = error['title']
+        content.innerText = error['content']
+    })
+</script>
+</body>
+</html>

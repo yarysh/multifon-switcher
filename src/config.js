@@ -12,12 +12,17 @@ export default {
         }
     },
     tray: {
-        icon: './assets/phone.png',
+        icon: './assets/routing0Template.png',
         toolTip: 'Multifon Switcher'
     },
     settingsWindow: {
         width: 600,
         height: 400,
         content: 'SettingsWindow.html'
+    },
+    errorWindow: {
+        width: 500,
+        height: 200,
+        content: 'ErrorWindow.html'
     }
 }

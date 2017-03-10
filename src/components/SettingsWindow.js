@@ -7,12 +7,14 @@ import config from '../config'
 
 
 export default class SettingsWindow {
-    constructor() {
+    constructor(multifonClient) {
         this.window = null
+        this.multifonClient = multifonClient
         ipcMain.on('save-settings', (event, data) => {
             if (data['login'] && data['password']) {
                 Credentials.set(data['login'], data['password'])
                 this.window.webContents.send('settings-saved', null)
+                this.multifonClient.checkCurrentRouting()
             } else {
                 this.window.webContents.send('settings-saved', 'Неверный логин или пароль')
             }
@@ -25,14 +27,14 @@ export default class SettingsWindow {
             width: config.settingsWindow.width,
             height: config.settingsWindow.height,
             maximizable: false,
-            show: false
+            resizable: false,
+            show: false,
         })
         this.window.loadURL(url.format({
             pathname: path.join(__dirname, config.settingsWindow.content),
             protocol: 'file:',
             slashes: true
         }))
-        this.window.webContents.openDevTools()
         this.window.once('ready-to-show', () => {
             const credentials = Credentials.get()
             if (credentials) {

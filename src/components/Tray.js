@@ -1,4 +1,5 @@
 import electron from 'electron'
+
 import {MultifonClient} from '../utils'
 import SettingsWindow from './SettingsWindow'
 import config from '../config'
@@ -10,10 +11,8 @@ export default class Tray {
         this.tray.setToolTip(config.tray.toolTip)
         this.menu = this._buildContextMenu()
         this.tray.setContextMenu(this.menu)
-
-        this.multifonClient = new MultifonClient(this.menuItemSwitcher)
-        this.settingsWindow = new SettingsWindow()
-
+        this.multifonClient = new MultifonClient(itemId => {this.menuItemSwitcher(itemId)})
+        this.settingsWindow = new SettingsWindow(this.multifonClient)
         // this.multifonClient.checkCurrentRouting()
     }
 
@@ -40,7 +39,7 @@ export default class Tray {
 
     menuItemSwitcher(itemId) {
         this.menu.items[itemId].checked = true
-        // TODO: Change menu icon
+        this.tray.setImage('./assets/routing' + itemId + 'Template.png')
     }
 
     quitApp() {
