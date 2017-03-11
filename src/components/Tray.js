@@ -11,9 +11,9 @@ export default class Tray {
         this.tray.setToolTip(config.tray.toolTip)
         this.menu = this._buildContextMenu()
         this.tray.setContextMenu(this.menu)
-        this.multifonClient = new MultifonClient(itemId => {this.menuItemSwitcher(itemId)})
+        this.multifonClient = new MultifonClient(this)
         this.settingsWindow = new SettingsWindow(this.multifonClient)
-        // this.multifonClient.checkCurrentRouting()
+        this.multifonClient.checkCurrentRouting()
     }
 
     _buildContextMenu() {
@@ -37,9 +37,21 @@ export default class Tray {
         ])
     }
 
-    menuItemSwitcher(itemId) {
-        this.menu.items[itemId].checked = true
-        this.tray.setImage('./assets/routing' + itemId + 'Template.png')
+    setNoCredentialsStatus() {
+        this.tray.setImage('./assets/nocredTemplate.png')
+    }
+
+    setLoadingStatus() {
+        this.tray.setImage('./assets/loadingTemplate.png')
+    }
+
+    setErrorStatus() {
+        this.tray.setImage('./assets/errorTemplate.png')
+    }
+
+    setRoutingStatus(routing) {
+        this.menu.items[routing].checked = true
+        this.tray.setImage('./assets/routing-' + routing + 'Template.png')
     }
 
     quitApp() {

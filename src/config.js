@@ -12,7 +12,7 @@ export default {
         }
     },
     tray: {
-        icon: './assets/routing0Template.png',
+        icon: './assets/loadingTemplate.png',
         toolTip: 'Multifon Switcher'
     },
     settingsWindow: {
