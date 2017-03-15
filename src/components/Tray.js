@@ -1,3 +1,4 @@
+import path from 'path'
 import electron from 'electron'
 
 import {MultifonClient} from '../utils'
@@ -7,7 +8,7 @@ import config from '../config'
 
 export default class Tray {
     constructor() {
-        this.tray = new electron.Tray(config.tray.icon)
+        this.tray = new electron.Tray(config.icons.loading)
         this.tray.setToolTip(config.tray.toolTip)
         this.menu = this._buildContextMenu()
         this.tray.setContextMenu(this.menu)
@@ -38,20 +39,20 @@ export default class Tray {
     }
 
     setNoCredentialsStatus() {
-        this.tray.setImage('./assets/nocredTemplate.png')
+        this.tray.setImage(config.icons.noCred)
     }
 
     setLoadingStatus() {
-        this.tray.setImage('./assets/loadingTemplate.png')
+        this.tray.setImage(config.icons.loading)
     }
 
     setErrorStatus() {
-        this.tray.setImage('./assets/errorTemplate.png')
+        this.tray.setImage(config.icons.error)
     }
 
     setRoutingStatus(routing) {
         this.menu.items[routing].checked = true
-        this.tray.setImage('./assets/routing-' + routing + 'Template.png')
+        this.tray.setImage(config.icons['routing'+routing])
     }
 
     quitApp() {
